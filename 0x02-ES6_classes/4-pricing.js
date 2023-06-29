@@ -6,7 +6,6 @@ export default class Pricing {
     this._currency = currency;
   }
 
-  //   setter and getter for amount
   get amount() {
     return this._amount;
   }
@@ -15,9 +14,8 @@ export default class Pricing {
     this._amount = newAmount;
   }
 
-  //   Setter and getter for currency
   get currency() {
-    return this._currnency;
+    return this._currency;
   }
 
   set currency(newCurrency) {
@@ -25,8 +23,8 @@ export default class Pricing {
   }
 
   displayFullPrice() {
-    const { _name, _code } = this._currency;
-    return `${this._amount} ${_name} (${_code})`;
+    const { name, code } = this._currency;
+    return `${this._amount} ${name} (${code})`;
   }
 
   static convertPrice(amount, conversionRate) {
