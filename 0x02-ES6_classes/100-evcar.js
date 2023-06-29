@@ -15,8 +15,8 @@ class EVCar extends Car {
   }
 
   cloneCar() {
-    const Species = Car[Symbol.species];
-    return new Species(this.brand, this.motor, this.color);
+    const Species = super.constructor[Symbol.species];
+    return new Species();
   }
 }
 
