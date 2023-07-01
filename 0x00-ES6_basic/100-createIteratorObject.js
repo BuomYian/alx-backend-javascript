@@ -1,4 +1,4 @@
-export default function createiteratorObject(report) {
+export default function createIteratorObject(report) {
   return {
     *[Symbol.iterator]() {
       for (const department in report.allEmployees) {
