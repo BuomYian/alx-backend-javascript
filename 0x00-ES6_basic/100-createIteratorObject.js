@@ -17,13 +17,13 @@ export default function createIteratorObject(report) {
       const employees = allEmployees[currentDepartment];
 
       if (currentEmployeeIndex >= employees.length) {
-        currentDepartmentIndex++;
+        currentDepartmentIndex += 1;
         currentEmployeeIndex = 0;
         return this.next();
       }
 
       const currentEmployee = employees[currentEmployeeIndex];
-      currentEmployeeIndex++;
+      currentEmployeeIndex += 1;
 
       return { value: currentEmployee, done: false };
     },
