@@ -1,5 +1,5 @@
 export default function createIteratorObject(report) {
-  const allEmployees = report.allEmployees;
+  const { allEmployees } = report;
   const departments = Object.keys(allEmployees);
   let currentDepartmentIndex = 0;
   let currentEmployeeIndex = 0;
