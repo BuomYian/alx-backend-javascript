@@ -7,7 +7,7 @@ export default function getResponseFromAPI() {
       if (success) {
         resolve('Promise resolved successfully');
       } else {
-        reject('Promise rejected with an error');
+        reject(new Error('Promise rejected with an error'));
       }
     }, 2000);
   });
