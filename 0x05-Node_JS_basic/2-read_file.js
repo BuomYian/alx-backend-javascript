@@ -19,8 +19,6 @@ function countStudents(path) {
 
     const fieldIndexMap = {
       firstname: headers.indexOf('firstname'),
-      lastname: headers.indexOf('lastname'),
-      age: headers.indexOf('age'),
       field: headers.indexOf('field'),
     };
 
@@ -37,12 +35,8 @@ function countStudents(path) {
       if (!studentsByField[field]) {
         studentsByField[field] = [];
       }
-      if (student[fieldIndexMap.firstname] && student[fieldIndexMap.lastname]) {
-        studentsByField[field].push(
-          `${student[fieldIndexMap.firstname]} ${
-            student[fieldIndexMap.lastname]
-          }`
-        );
+      if (student[fieldIndexMap.firstname]) {
+        studentsByField[field].push(student[fieldIndexMap.firstname]);
       }
     });
 
