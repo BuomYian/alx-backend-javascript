@@ -3,7 +3,6 @@ const readline = require('readline');
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
-  terminal: !process.stdin.isTTY, // Use terminal mode only if stdin is a TTY
 });
 
 console.log('Welcome to Holberton School, what is your name?');
