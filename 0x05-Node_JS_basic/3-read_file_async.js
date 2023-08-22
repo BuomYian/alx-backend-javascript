@@ -1,53 +1,49 @@
 const fs = require('fs');
 
-function countStudents(path) {
-  return new Promise((resolve, reject) => {
-    fs.readFile(path, 'utf8', (error, data) => {
-      if (error) {
+const countStudents = (dataPath) =>
+  new Promise((resolve, reject) => {
+    fs.readFile(dataPath, 'utf-8', (err, data) => {
+      if (err) {
         reject(new Error('Cannot load the database'));
-        return;
       }
+      if (data) {
+        const fileLines = data.toString('utf-8').trim().split('\n');
+        const studentGroups = {};
+        const dbFieldNames = fileLines[0].split(',');
+        const studentPropNames = dbFieldNames.slice(0, dbFieldNames.length - 1);
 
-      const lines = data.trim().split('\n');
-      const headers = lines[0].split(',');
-
-      const students = {};
-      const fieldIndex = headers.findIndex(
-        (header) => header.trim() === 'field'
-      );
-      const nameIndex = headers.findIndex(
-        (header) => header.trim() === 'firstname'
-      );
-
-      if (fieldIndex === -1 || nameIndex === -1) {
-        reject(new Error('Invalid CSV format: missing required columns'));
-        return;
-      }
-
-      lines.slice(1).forEach((line) => {
-        const values = line.split(',');
-        const fieldName = values[fieldIndex].trim();
-        const name = values[nameIndex].trim();
-
-        if (!students[fieldName]) {
-          students[fieldName] = [];
+        for (const line of fileLines.slice(1)) {
+          const studentRecord = line.split(',');
+          const studentPropValues = studentRecord.slice(
+            0,
+            studentRecord.length - 1
+          );
+          const field = studentRecord[studentRecord.length - 1];
+          if (!Object.keys(studentGroups).includes(field)) {
+            studentGroups[field] = [];
+          }
+          const studentEntries = studentPropNames.map((propName, idx) => [
+            propName,
+            studentPropValues[idx],
+          ]);
+          studentGroups[field].push(Object.fromEntries(studentEntries));
         }
 
-        students[fieldName].push(name);
-      });
-
-      console.log(`Number of students: ${lines.length - 1}`);
-      for (const field in students) {
-        console.log(
-          `Number of students in ${field}: ${
-            students[field].length
-          }. List: ${students[field].join(', ')}`
+        const totalStudents = Object.values(studentGroups).reduce(
+          (pre, cur) => (pre || []).length + cur.length
         );
+        console.log(`Number of students: ${totalStudents}`);
+        for (const [field, group] of Object.entries(studentGroups)) {
+          const studentNames = group
+            .map((student) => student.firstname)
+            .join(', ');
+          console.log(
+            `Number of students in ${field}: ${group.length}. List: ${studentNames}`
+          );
+        }
+        resolve(true);
       }
-
-      resolve();
     });
   });
-}
 
 module.exports = countStudents;
