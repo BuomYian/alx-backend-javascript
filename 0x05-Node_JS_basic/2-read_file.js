@@ -1,37 +1,42 @@
 const fs = require('fs');
 
-function countStudents(path) {
+const countStudents = (dataPath) => {
   try {
-    const database = fs.readFileSync(path, 'utf8');
-    const lines = database.split('\n').filter((line) => line.trim() !== '');
-
-    if (lines.length === 0) {
-      throw new Error('No valid student data found in the database');
+    if (!fs.existsSync(dataPath) || !fs.statSync(dataPath).isFile()) {
+      throw new Error('Cannot load the database');
     }
 
-    const fields = lines[0].split(',').map((field) => field.trim());
+    const fileContents = fs.readFileSync(dataPath, 'utf-8');
+    const lines = fileContents.trim().split('\n');
+
+    const headers = lines[0].split(',').map((header) => header.trim());
+    const studentFields = headers.slice(0, -1);
+
+    const studentsByField = {};
+    lines.slice(1).forEach((line) => {
+      const studentData = line.split(',').map((item) => item.trim());
+      const field = studentData.pop();
+
+      if (!studentsByField[field]) {
+        studentsByField[field] = [];
+      }
+
+      const studentName = studentData.slice(0, 2).join(' ');
+      studentsByField[field].push(studentName);
+    });
 
     console.log(`Number of students: ${lines.length - 1}`);
-
-    fields.forEach((field) => {
-      if (field !== 'firstname' && field !== 'lastname' && field !== 'age') {
-        const studentsInField = lines
-          .slice(1)
-          .map((line) => line.split(',')[fields.indexOf(field)].trim());
-        const validStudents = studentsInField.filter(
-          (student) => student !== ''
-        );
-
-        console.log(
-          `Number of students in ${field}: ${
-            validStudents.length
-          }. List: ${validStudents.join(', ')}`
-        );
-      }
+    studentFields.forEach((field) => {
+      const studentList = studentsByField[field] || [];
+      console.log(
+        `Number of students in ${field}: ${
+          studentList.length
+        }. List: ${studentList.join(', ')}`
+      );
     });
   } catch (error) {
     console.error(error.message);
   }
-}
+};
 
 module.exports = countStudents;
