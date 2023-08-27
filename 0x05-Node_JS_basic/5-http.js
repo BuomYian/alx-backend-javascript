@@ -4,14 +4,12 @@ const countStudents = require('./3-read_file_async');
 
 const app = http.createServer((req, res) => {
   if (req.method === 'GET') {
-    const parsedUrl = url.parse(req.url, true);
-    const pathname = parsedUrl.pathname;
+    const { pathname, query } = url.parse(req.url, true);
 
     if (pathname === '/') {
       res.writeHead(200, { 'Content-Type': 'text/plain' });
       res.end('Hello Holberton School!\n');
     } else if (pathname === '/students') {
-      const query = parsedUrl.query;
       const databaseFile = query.file || 'database.csv';
 
       res.writeHead(200, { 'Content-Type': 'text/plain' });
