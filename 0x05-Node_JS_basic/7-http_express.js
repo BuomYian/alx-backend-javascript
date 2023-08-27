@@ -1,25 +1,23 @@
 const express = require('express');
-const app = express();
+const fs = require('fs');
 const countStudents = require('./3-read_file_async');
 
+const app = express();
 const PORT = 1245;
 
 app.get('/', (req, res) => {
-  res.send('Hello Holberton School!\n');
+  res.send('Hello Holberton School!');
 });
 
 app.get('/students', (req, res) => {
-  const query = req.query;
-  const databaseFile = query.file || 'database.csv';
-
-  res.setHeader('Content-Type', 'text/plain');
+  const databaseFile = req.query.file || 'database.csv';
 
   countStudents(databaseFile)
-    .then(() => {
-      res.send('This is the list of our students\n');
+    .then((report) => {
+      res.send(`This is the list of our students\n${report}`);
     })
     .catch((error) => {
-      res.send(error.message + '\n');
+      res.status(500).send(error.message);
     });
 });
 
